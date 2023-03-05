@@ -28,6 +28,7 @@
                 <div class="navbar-nav">
                     {% comment %} Check if user is logged in {% endcomment %}
                     {% if user.is_authenticated %}
+                        <a class="nav-item nav-link" href="{% url 'post-create' %}">New Post</a>
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
                     {% comment %} If not, render Login and Register Links {% endcomment %}
