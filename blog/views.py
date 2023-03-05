@@ -4,7 +4,8 @@ from django.views.generic import (
     ListView, 
     DetailView, 
     CreateView,
-    UpdateView
+    UpdateView,
+    DeleteView,
     )
 from .models import Post
 
@@ -50,6 +51,16 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         post = self.get_object()
         # Check if user is owner of updated post
+        return self.request.user == post.author
+
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    success_url = '/'
+
+    def test_func(self):
+        post = self.get_object()
+        # Check if user is owner of deleted post
         return self.request.user == post.author
 
 
