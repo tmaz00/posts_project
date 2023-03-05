@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView, 
     DetailView, 
-    CreateView
+    CreateView,
+    UpdateView
     )
 from .models import Post
 
@@ -35,6 +36,21 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         # We need to tell Django that author of created post is currently logged in user.
         form.instance.author = self.request.user
         return super().form_valid(form)
+    
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    fields = ['title', 'content']
+
+    def form_valid(self, form):
+        # We need to tell Django that author of created post is currently logged in user.
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+    def test_func(self):
+        post = self.get_object()
+        # Check if user is owner of updated post
+        return self.request.user == post.author
 
 
 def about(request):
